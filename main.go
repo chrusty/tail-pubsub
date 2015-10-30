@@ -48,10 +48,12 @@ func main() {
 	fullSubscriptionName := fmt.Sprintf("projects/%v/subscriptions/%v", *project, "tail-pubsub")
 
 	// Create a subscription:
+	log.Debugf("Making subscription to topic (%v) ...", fullTopicName)
 	sub := &pubsub.Subscription{Topic: fullTopicName}
 	subscription, err := pubsubService.Projects.Subscriptions.Create(fullSubscriptionName, sub).Do()
 	if err != nil {
 		log.Warnf("Failed to create subscription to topic (%v): %v", fullTopicName, err)
+		log.Debugf("Getting existing subscription (%v) to topic (%v) ...", fullSubscriptionName, fullTopicName)
 		subscription, err = pubsubService.Projects.Subscriptions.Get(fullSubscriptionName).Do()
 		if err != nil {
 			log.Criticalf("Couldn't even get existing subscription (%v): %v", fullSubscriptionName, err)
@@ -62,12 +64,13 @@ func main() {
 
 	// Prepare a pull-request:
 	pullRequest := &pubsub.PullRequest{
-		ReturnImmediately: false,
+		ReturnImmediately: true,
 		MaxMessages:       *batchsize,
 	}
 
 	// Now attack the pub/sub API:
 	for {
+		log.Debugf("Polling for messages ...")
 		pullResponse, err := pubsubService.Projects.Subscriptions.Pull(fullSubscriptionName, pullRequest).Do()
 		if err != nil {
 			log.Errorf("Failed to pull messages from subscription (%v): %v", fullSubscriptionName, err)
@@ -88,6 +91,7 @@ func main() {
 			}
 		}
 
+		// Sleep until trying again:
 		time.Sleep(1 * time.Second)
 
 	}
