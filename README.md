@@ -13,6 +13,7 @@ Usage of ./tail-pubsub:
 ## Credentials:
 Credentials can either be derived from a credentials file, or from instance permissions:
 * Credentials-file should be '~/.config/gcloud/application_default_credentials.json'
-* Alternatively you can use any other file: ```export GOOGLE_APPLICATION_CREDENTIALS=~/Downloads/credentials-file.json```
+* Alternatively you can use any other file:
+  ```export GOOGLE_APPLICATION_CREDENTIALS=~/Downloads/credentials-file.json```
 * Instance permissions required:
   * PubsubScope = "https://www.googleapis.com/auth/pubsub"
