@@ -80,7 +80,7 @@ func main() {
 				if err != nil {
 					log.Warnf("Failed to decode message: %v", err)
 				} else {
-					log.Infof("Message: %v", messageData)
+					log.Infof("Message: %v", string(messageData))
 					ackRequest := &pubsub.AcknowledgeRequest{
 						AckIds: []string{receivedMessage.AckId},
 					}
